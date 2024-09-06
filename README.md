@@ -46,7 +46,7 @@ You need to have Python 3.x installed on your machine. If you don't have Python 
 
 3. Run the script:
    ```bash
-   python port_scanner.py
+   python portScanner.py
    ```
 
 ### Usage
