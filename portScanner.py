@@ -18,16 +18,22 @@ common_ports = {
     27017: "MongoDB", 5040: "Citrix", 5357: "WSD", 8090: "Web App"
 }
 
+# Color codes for terminal output
+GREEN = "\033[92m"
+CYAN = "\033[96m"
+RED = "\033[91m"
+RESET = "\033[0m"
+
 def tcp_handshake(ipaddress, port):
     try:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.settimeout(0.5)
-        print(f"[+] Sending SYN to {ipaddress}:{port}")
+        print(f"{CYAN}[+] Sending SYN to {ipaddress}:{port}{RESET}")
         sock.connect((ipaddress, port))
-        print(f"[+] Received SYN-ACK from {ipaddress}:{port}")
-        print(f"[+] Sending ACK to {ipaddress}:{port}")
+        print(f"{CYAN}[+] Received SYN-ACK from {ipaddress}:{port}{RESET}")
+        print(f"{CYAN}[+] Sending ACK to {ipaddress}:{port}{RESET}")
     except Exception as e:
-        print(f"[-] Error with {ipaddress}:{port} - {str(e)}")
+        print(f"{RED}[-] Error with {ipaddress}:{port} - {str(e)}{RESET}")
     finally:
         sock.close()
 
@@ -37,15 +43,17 @@ def scan_port(ipaddress, port):
         sock.settimeout(0.5)
         sock.connect((ipaddress, port))
         service = common_ports.get(port, "Unknown Service")
-        print(f"[+] Port {port} ({service}) is Open")
+        print(f"{GREEN}[+] Port {port} ({service}) is Open{RESET}")
         tcp_handshake(ipaddress, port)
     except:
+        # Do nothing if the port is closed
         pass
     finally:
         sock.close()
 
 def start_scan(target, ports):
-    print(f"\nStarting Scan for {target}")
+    print(f"\n{CYAN}Starting Scan for {target}{RESET}")
+    print(f"{'-'*50}\n")
     threads = []
     for port in range(1, ports + 1):
         thread = threading.Thread(target=scan_port, args=(target, port))
@@ -54,12 +62,34 @@ def start_scan(target, ports):
 
     for thread in threads:
         thread.join()
-    print("Scan Complete.\n")
+    print(f"\n{CYAN}Scan Complete for {target}.{RESET}\n{'='*50}\n")
+
+def resolve_domain_to_ip(domain):
+    try:
+        ip_address = socket.gethostbyname(domain)
+        print(f"{GREEN}[+] Resolved {domain} to IP: {ip_address}{RESET}")
+        return ip_address
+    except socket.gaierror:
+        print(f"{RED}[-] Could not resolve domain: {domain}{RESET}")
+        return None
 
 if __name__ == "__main__":
-    target_ip = input("Enter Target IP: ").strip()
-    try:
-        ports_to_scan = int(input("Enter number of ports to scan: ").strip())
-        start_scan(target_ip, ports_to_scan)
-    except ValueError:
-        print("Please enter a valid number for ports.")
+    while True:
+        target_input = input("Enter Target IP or Domain (or type 'quit' to exit): ").strip()
+        
+        if target_input.lower() == 'quit':
+            print("Exiting the program.")
+            break
+        
+        # Check if input is an IP or Domain
+        if target_input.replace('.', '').isdigit():  # Simple check for an IP address
+            target_ip = target_input
+        else:
+            target_ip = resolve_domain_to_ip(target_input)
+        
+        if target_ip:
+            try:
+                ports_to_scan = int(input("Enter number of ports to scan: ").strip())
+                start_scan(target_ip, ports_to_scan)
+            except ValueError:
+                print(f"{RED}Please enter a valid number for ports.{RESET}")
