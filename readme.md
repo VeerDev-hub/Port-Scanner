@@ -1,7 +1,7 @@
-Overview
+**Overview:**
 This project is a simple Python-based port scanner that can scan a specified range of ports on a target IP address or domain. It performs a basic TCP handshake to determine if the port is open and attempts to retrieve the geolocation of the target IP address using the ipapi service.
 
-Features:
+**Features:**
 Scans a range of ports and checks if they are open.
 Performs a basic TCP handshake (SYN-ACK-ACK) on open ports.
 Resolves a domain name to an IP address.
@@ -10,12 +10,12 @@ Displays common port services like HTTP, HTTPS, FTP, MySQL, etc.
 Requirements
 Before running the script, you need to install the following Python package:
 
-requests: This is used for making HTTP requests to the ipapi service to fetch geolocation data.
+**requests:** This is used for making HTTP requests to the ipapi service to fetch geolocation data.
 You can install the required dependencies by running the following command:
 
 pip install -r requirements.txt
-Installation
 
+**Installation**
 Clone the repository (if you're using Git):
 git clone https://github.com/VeerDev-hub/port-scanner.git
 cd port-scanner
@@ -25,14 +25,12 @@ Run the following command to install the required Python packages:
 pip install -r requirements.txt
 
 To use the port scanner:
-
 Run the script:
-
 In your terminal or command prompt, run the script: 
 python portScanner.py
 Provide input:
 
-Enter a target IP address or domain name when prompted.
+**Enter a target IP address or domain name when prompted.**
 Optionally, specify the number of ports to scan (for example, 1-1024).
 The script will display the open ports and their corresponding services.
 It will also perform a TCP handshake and display the status.
@@ -41,7 +39,7 @@ Exit the script:
 
 To exit the script, type quit when prompted for a target.
 
-Example Output
+**Example Output**
 Enter Target IP or Domain (or type 'quit' to exit): example.com
 
 [+] Resolved example.com to IP: 93.184.216.34
@@ -54,8 +52,8 @@ Enter Target IP or Domain (or type 'quit' to exit): example.com
 License
 This project is open-source and available under the MIT License.
 
-Contributing
+**Contributing**
 Feel free to fork this project, submit issues, and create pull requests. Contributions are welcome!
 
-Contact
+**Contact**
 If you have any questions or suggestions, please feel free to contact me via veerprataps.ranawat@gmail.com or create an issue in the GitHub repository.
