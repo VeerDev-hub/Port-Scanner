@@ -13,22 +13,16 @@ Before running the script, you need to install the following Python package:
 requests: This is used for making HTTP requests to the ipapi service to fetch geolocation data.
 You can install the required dependencies by running the following command:
 
-bash
-Copy code
 pip install -r requirements.txt
 Installation
 Clone the repository (if you're using Git):
 
-bash
-Copy code
 git clone https://github.com/VeerDev-hub/port-scanner.git
 cd port-scanner
 Install dependencies:
 
 Run the following command to install the required Python packages:
 
-bash
-Copy code
 pip install -r requirements.txt
 Usage
 To use the port scanner:
@@ -37,8 +31,7 @@ Run the script:
 
 In your terminal or command prompt, run the script:
 
-bash
-Copy code
+
 python port_scanner.py
 Provide input:
 
@@ -52,8 +45,6 @@ Exit the script:
 To exit the script, type quit when prompted for a target.
 
 Example Output
-less
-Copy code
 Enter Target IP or Domain (or type 'quit' to exit): example.com
 [+] Resolved example.com to IP: 93.184.216.34
 [+] Geolocation: Los Angeles, California, United States
