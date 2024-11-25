@@ -1,4 +1,0 @@
-This file lists all the external libraries required for your Python project. Since your port scanner is basic and doesn’t use any third-party libraries.
-
-socket
-threading
