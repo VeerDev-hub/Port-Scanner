@@ -15,8 +15,8 @@ You can install the required dependencies by running the following command:
 
 pip install -r requirements.txt
 Installation
-Clone the repository (if you're using Git):
 
+Clone the repository (if you're using Git):
 git clone https://github.com/VeerDev-hub/port-scanner.git
 cd port-scanner
 Install dependencies:
@@ -28,10 +28,8 @@ To use the port scanner:
 
 Run the script:
 
-In your terminal or command prompt, run the script:
-
-
-python port_scanner.py
+In your terminal or command prompt, run the script: 
+python portScanner.py
 Provide input:
 
 Enter a target IP address or domain name when prompted.
