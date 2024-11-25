@@ -22,9 +22,8 @@ cd port-scanner
 Install dependencies:
 
 Run the following command to install the required Python packages:
-
 pip install -r requirements.txt
-Usage
+
 To use the port scanner:
 
 Run the script:
@@ -46,6 +45,7 @@ To exit the script, type quit when prompted for a target.
 
 Example Output
 Enter Target IP or Domain (or type 'quit' to exit): example.com
+
 [+] Resolved example.com to IP: 93.184.216.34
 [+] Geolocation: Los Angeles, California, United States
 [+] Initiating TCP Handshake on 93.184.216.34:80
