@@ -229,7 +229,7 @@ def export_csv(path, result_rows):
 
 def export_md(path, metadata, result_rows):
     with open(path, "w", encoding="utf-8") as f:
-        f.write("# Port Scanner CLI Report\n\n")
+        f.write("# PortSpectre CLI Report\n\n")
         for k, v in metadata.items():
             f.write(f"- **{k}**: {v}\n")
         f.write("\n## Results\n\n")
@@ -415,7 +415,7 @@ def run(args):
 
 
 def build_parser():
-    p = argparse.ArgumentParser(description="Hacker-style CLI Port Scanner")
+    p = argparse.ArgumentParser(description="PortSpectre CLI")
     p.add_argument("target", help="Domain, IP, or CIDR target")
     p.add_argument("--ports", type=int, default=1000, help="Count mode: scan first N ports (default: 1000)")
     p.add_argument("--port-range", default="", help="Range/list mode: e.g. 1-1024,3306,8080")
