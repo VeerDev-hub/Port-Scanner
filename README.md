@@ -13,9 +13,24 @@ Fast hacker-style port scanner CLI with clean terminal output, progress animatio
 - Timing profiles: `-T0` to `-T5`
 - Optional service/version detection: `-sV`
 - Optional aggressive enrichment: `-A`
+- Top-ports profiles: `--top-ports 100|1000|5000`
+- State filtering: `--only-state open|closed|filtered|unknown`
+- Exclusion support: `--exclude-ports`
+- Scan diff mode: `--compare old.json new.json`
+- Inventory summary mode: `--inventory`
+- Plugin enrichment system: `--plugin-dir plugins`
+- Basic TUI-style dashboard: `--tui`
+- Rate limiting and adaptive timeout: `--rate`, `--adaptive-timeout`
+- Public-target legal acknowledgment: `--i-understand`
 - CIDR scan support with `--scan-all-hosts`
 - Export reports to `json`, `csv`, and `md`
 - Minimal output mode: `--quiet`
+
+## PortSpectre vs Nmap (Quick View)
+
+- PortSpectre: lightweight CLI focused on fast scans, clean output, and exportable reports.
+- Nmap: full recon suite with advanced fingerprinting, NSE scripts, and deep scan techniques.
+- Use PortSpectre for quick assessments and reporting; use Nmap for exhaustive recon.
 
 ## Quick Start
 
@@ -37,6 +52,15 @@ python portscanner_cli.py 192.168.1.0/24 --scan-all-hosts --port-range 22,80,443
 
 # Export reports
 python portscanner_cli.py scanme.nmap.org --scan-type CONNECT -T 4 --ports 300 --json-out reports/scan.json --csv-out reports/scan.csv --md-out reports/scan.md --no-banner
+
+# Top ports with exclusions and state filter
+python portscanner_cli.py scanme.nmap.org --top-ports 1000 --exclude-ports 445,3389 --only-state open --i-understand
+
+# Compare two JSON reports
+python portscanner_cli.py --compare reports/old.json reports/new.json
+
+# Inventory + dashboard
+python portscanner_cli.py 192.168.1.0/24 --scan-all-hosts --port-range 22,80,443 --inventory --tui
 ```
 
 ## One-Command Builds
@@ -74,6 +98,18 @@ Output artifact:
 
 - `dist/portspectre`
 
+## Debian Package Build
+
+```bash
+chmod +x build.sh package_deb.sh
+./build.sh --clean
+./package_deb.sh
+```
+
+Output artifact:
+
+- `dist/portspectre_<version>_amd64.deb`
+
 ## Linux Packaging Notes
 
 - `CONNECT` mode runs as normal user.
@@ -87,14 +123,31 @@ sudo setcap cap_net_raw,cap_net_admin+eip ./dist/portspectre
 
 - `--ports N`: scan first `N` ports
 - `--port-range`: custom ranges/lists (example `1-1024,3306,8080`)
+- `--top-ports`: common-port profile count
+- `--exclude-ports`: remove ports from active target set
 - `--scan-type`: `SYN|UDP|STEALTH|CONNECT`
 - `-T`: timing profile `0..5`
 - `-sV`: enable service/version detection
+- `--adaptive-timeout`: increase timeout per retry
+- `--rate`: max probe submissions per second
 - `-A`: enable aggressive enrichment
 - `--show-all`: include non-open results
+- `--only-state`: show a single state category
 - `--scan-all-hosts`: scan all alive hosts for CIDR (and all resolved IPv4s for domain)
+- `--compare old.json new.json`: report opened/closed deltas
+- `--inventory`: host summary table
+- `--plugin-dir`: load custom enrichment plugins
+- `--tui`: print compact dashboard
+- `--i-understand`: required for public target scans
 - `--quiet`: hide informational logs
 - `--json-out`, `--csv-out`, `--md-out`: export reports
+
+## Integration Testing
+
+```bash
+chmod +x integration/test_integration.sh
+./integration/test_integration.sh
+```
 
 ## Disclaimer
 
