@@ -48,6 +48,13 @@ def banner_grab(ip, port, timeout_seconds=0.8, host_header=None):
                 if port in (80, 8080, 8000, 8888):
                     host_val = (host_header or ip).encode()
                     s.sendall(b"HEAD / HTTP/1.1\r\nHost: " + host_val + b"\r\nConnection: close\r\n\r\n")
+                elif port in (25, 587):
+                    s.recv(256)
+                    s.sendall(b"EHLO portspectre.local\r\n")
+                elif port == 21:
+                    s.recv(256)
+                elif port == 22:
+                    s.recv(256)
                 elif port == 443:
                     context = ssl.create_default_context()
                     with context.wrap_socket(s, server_hostname=(host_header or ip)) as tls:
@@ -81,6 +88,7 @@ def scan_port(
     delay_seconds=0.0,
     host_header=None,
     service_version=False,
+    adaptive_timeout=False,
 ):
     try:
         if delay_seconds > 0:
@@ -91,8 +99,9 @@ def scan_port(
             response = None
             attempts = 0
             while attempts <= retries:
+                this_timeout = timeout_seconds * (1 + attempts * 0.6) if adaptive_timeout else timeout_seconds
                 with SCAPY_LOCK:
-                    response = sr1(pkt, timeout=timeout_seconds, verbose=0)
+                    response = sr1(pkt, timeout=this_timeout, verbose=0)
                 if response is not None:
                     break
                 attempts += 1
@@ -115,8 +124,10 @@ def scan_port(
             response = None
             attempts = 0
             while attempts <= retries:
+                base_timeout = max(timeout_seconds, 2.0)
+                this_timeout = base_timeout * (1 + attempts * 0.6) if adaptive_timeout else base_timeout
                 with SCAPY_LOCK:
-                    response = sr1(pkt, timeout=max(timeout_seconds, 2.0), verbose=0)
+                    response = sr1(pkt, timeout=this_timeout, verbose=0)
                 if response is not None:
                     break
                 attempts += 1
@@ -140,17 +151,24 @@ def scan_port(
             else:
                 status = "Unknown TCP Response"
         elif scan_type == "CONNECT":
-            try:
-                with pysock.create_connection((ip, port), timeout=timeout_seconds):
-                    status = "Open"
-            except Exception as exc:
-                msg = str(exc).lower()
-                if "refused" in msg:
-                    status = "Closed"
-                elif "timeout" in msg:
-                    status = "Filtered"
-                else:
-                    status = "Filtered"
+            status = "Filtered"
+            attempts = 0
+            while attempts <= retries:
+                this_timeout = timeout_seconds * (1 + attempts * 0.6) if adaptive_timeout else timeout_seconds
+                try:
+                    with pysock.create_connection((ip, port), timeout=this_timeout):
+                        status = "Open"
+                        break
+                except Exception as exc:
+                    msg = str(exc).lower()
+                    if "refused" in msg:
+                        status = "Closed"
+                        break
+                    if "timeout" in msg:
+                        status = "Filtered"
+                    else:
+                        status = "Filtered"
+                attempts += 1
         else:
             status = "Unsupported Scan Type"
 
